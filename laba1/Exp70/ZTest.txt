@@ -1,0 +1,10 @@
+Two-sample z-Test
+
+data:  Exp70 and Exp170
+z = -0.091572, p-value = 0.927
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -59.06693  53.79392
+sample estimates:
+mean of x mean of y 
+ 221.1660  223.8026 

@@ -1,6 +1,7 @@
 
 library(moments)
 library(BSDA)
+library(ggplot2)
 
 Norm30 <- rnorm(30, 230, 27)
 Norm70 <- rnorm(70, 230, 27)
@@ -206,10 +207,116 @@ BartlettTest(Exp170, "Exp170")
 
 z.test(Exp70, Exp170, sigma.x = sd(Exp70), sigma.y = sd(Exp170))
 
+Kolmogorov_Smirnow <- function(vec, name){
+  sorted <- sort(vec)
+  Mean <- mean(sorted)
+  SD <- sd(sorted)
+  n <- length(vec)
+  EmpricialDistribution <- rep(0, n)
+  for(i in 1 : n){
+    EmpricialDistribution[i] <- i / n
+  }
+  
+  TeareticalDistribution <- rep(0, n)
+  for(i in 1 : n){
+    TeareticalDistribution[i] <- pnorm(sorted[i], Mean, SD)
+  }
+  
+  Diffrence <- rep(0, n)
+  for(i in 1 : n){
+    Diffrence[i] <- abs(TeareticalDistribution[i] - EmpricialDistribution[i])
+  }
+  
+  maxDiffrence <- max(Diffrence)
+  Kolmogorov_SmirnovStatistics <- sqrt(n) * maxDiffrence
+  C <- 1.358
+  ChanceToAccept <- exp(-1 * maxDiffrence ^ 2 * n)
+  
+  path <- paste0("Kolmogorov-Smirnow", name, ".png")
+  png(file = path)
+  plot(EmpricialDistribution, col = "blue")
+  lines(EmpricialDistribution, col = "blue")
+  points(TeareticalDistribution, col = "red")
+  lines(TeareticalDistribution, col = "red")
+  title("red - Tearetical, blue - Empricial")
+  dev.off()
+  
+  write.table(EmpricialDistribution, "EmpricialDistribution.txt")
+  write.table(TeareticalDistribution, "TeareticalDistribution.txt")
+  write.table(Diffrence, "Diffrence.txt")
+  
+  path <- paste0("Kolmogorov-Smirnow", name, ".txt")
+  Kolmogorov_SmirnovInfo <- file(path)
+  writeLines(c("Max diffrence:", maxDiffrence, "Kolmogorov_SmirnovStatistics", 
+               Kolmogorov_SmirnovStatistics, "C: ", C, "ChanceToAccept", ChanceToAccept), 
+             Kolmogorov_SmirnovInfo)
+  close(Kolmogorov_SmirnovInfo)
+}
+
+Kolmogorov_Smirnow(Norm170, "N170")
+Kolmogorov_Smirnow(Exp170, "Exp170")
 
 
+Chi_square_graph <- function(vec, name){
+  
+  Min <- min(vec)
+  Max <- max(vec)
+  
+  n <- 12
+  b <- T
+  while(b){
+    b <- F
+    tmp <- rep(0, n)
+    xVec <- rep(0, n + 1)
+    Step <- (Max - Min) / n
+    for(i in 1 : n + 1){
+      xVec[i] <- Min + (i - 1) * (Step)
+    }
+    for(i in 1 : length(vec)){
+      for(j in 1 : n){
+        if(vec[i] >= xVec[j] && vec[i] <= xVec[j + 1]){
+          tmp[j] <- tmp[j] + 1
+        }
+      }
+    }
+    
+    for(i in 1 : n){
+      if(tmp[i] < 3){
+        b = T
+        n <- n - 1
+        break
+      }
+    }
+    
+  }
+  
+  Mean <- mean(vec)
+  SD <- sd(vec)
+  teoretic <- rep(0, length(tmp))
+  for(i in 1 : length(tmp)){
+    teoretic[i] <- pnorm((xVec[i + 1] - Mean) / SD) - pnorm((xVec[i] - Mean) / SD)
+  }
+  
+  practical <- rep(0, length(tmp))
+  for(i in 1 : length(tmp)){
+    practical[i] <- tmp[i] / length(vec)
+  }
+  
+  
+  path <- paste0("Chi-squer", name, ".png")
+  png(file = path)
+  plot(practical, col = "red")
+  lines(practical, col = "red")
+  points(teoretic, col = "blue")
+  lines(teoretic, col = "blue")
+  title("red - practical, blue - teoretical")
+  dev.off()
+  
+  write.table(teoretic, paste0("TeoretacialChi-squear", name, ".txt"))
+  write.table(practical, paste0("PracticalChi-squear", name, ".txt"))
+  write.table(xVec, paste0("XIntervalsChi-squear", name, ".txt"))
+}
 
-
-
-
+Chi_square_graph(Norm300, "N300")
+Chi_square_graph(Exp300, "Exp300")
 

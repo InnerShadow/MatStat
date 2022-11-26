@@ -1,0 +1,8 @@
+Max diffrence:
+0.0490788100293253
+Kolmogorov_SmirnovStatistics
+0.639909392775323
+C: 
+1.358
+ChanceToAccept
+0.663992761472419
