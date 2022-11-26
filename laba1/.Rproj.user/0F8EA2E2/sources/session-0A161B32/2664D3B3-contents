@@ -1,5 +1,6 @@
 
 library(moments)
+library(BSDA)
 
 Norm30 <- rnorm(30, 230, 27)
 Norm70 <- rnorm(70, 230, 27)
@@ -109,16 +110,101 @@ CountExpConfidenceIntervals(Exp30, "Exp30")
 CountExpConfidenceIntervals(Exp70, "Exp70")
 CountExpConfidenceIntervals(Exp170, "Exp170")
 
+IsNormalDuringSkewnessAndKurtosis <- function(vec, name){
+  n <- length(vec)
+  Ds <- skewness(vec)
+  De <- kurtosis(vec) - 3
+  DS <- sqrt((6 * n * (n - 1)) / ((n - 2) * (n + 1) * (n + 3)))
+  DE <- sqrt((24 * n * (n - 1) ^ 2) / ((n - 3) * (n - 2) * (n + 3) * (n + 5)))
+  path <- paste0("IsNormalDuringSkewnessAndKurtosis", name, ".txt")
+  IsNormal <- file(path)
+  writeLines(c("Is Normal During Skewness, ", paste("Ds =", Ds, "DS =", DS), (abs(Ds)) <= (3 * DS), 
+               "Is Normal During Kurtosis", paste("De =", De, "DE =", DE), (abs(De)) <= (5 * DE)), IsNormal)
+  close(IsNormal)
+}
 
+IsNormalDuringSkewnessAndKurtosis(Norm30, "N30")
+IsNormalDuringSkewnessAndKurtosis(Norm70, "N70")
 
+FTest <- function(vec1, vec2){
+  path <- c("Ftest.txt")
+  ftest <- file(path)
+  resualt1 <- var.test(vec1, vec2, conf.level = 0.99)
+  resualt5 <- var.test(vec1, vec2, conf.level = 0.95)
+  resualt10 <- var.test(vec1, vec2, conf.level = 0.90)
+  writeLines(c("1%", names(resualt1[[1]]) ,resualt1[[1]], names(resualt1[[2]]),
+               resualt1[[2]], names(resualt1[[3]]), resualt1[[3]], names(resualt1[[4]]), resualt1[[4]], 
+               names(resualt1[[5]]), resualt1[[5]], names(resualt1[[6]]), resualt1[[6]],
+               names(resualt1[[7]]), resualt1[[7]], names(resualt1[[8]]), resualt1[[8]], 
+               names(resualt1[[9]]), resualt1[[9]], "",
+               "5%", names(resualt5[[1]]) ,resualt5[[1]], names(resualt5[[2]]),
+               resualt5[[2]], names(resualt5[[3]]), resualt5[[3]], names(resualt5[[4]]), resualt5[[4]], 
+               names(resualt5[[5]]), resualt5[[5]], names(resualt5[[6]]), resualt5[[6]],
+               names(resualt5[[7]]), resualt5[[7]], names(resualt5[[8]]), resualt5[[8]], 
+               names(resualt5[[9]]), resualt5[[9]], "",
+               "10%", names(resualt10[[1]]) ,resualt10[[1]], names(resualt10[[2]]),
+               resualt10[[2]], names(resualt10[[3]]), resualt10[[3]], names(resualt10[[4]]), resualt10[[4]], 
+               names(resualt10[[5]]), resualt10[[5]], names(resualt10[[6]]), resualt10[[6]],
+               names(resualt10[[7]]), resualt10[[7]], names(resualt10[[8]]), resualt10[[8]], 
+               names(resualt10[[9]]), resualt10[[9]]
+               ), ftest)
+  close(ftest)
+}
 
+FTest(Norm30, Norm70)
 
+TTest <- function(vec1, vec2){
+  path <- c("Ttest.txt")
+  ttest <- file(path)
+  resualt1 <- t.test(vec1, vec2, conf.level = 0.99)
+  resualt5 <- t.test(vec1, vec2, conf.level = 0.95)
+  resualt10 <- t.test(vec1, vec2, conf.level = 0.90)
+  writeLines(c("1%", names(resualt1[[1]]) ,resualt1[[1]], names(resualt1[[2]]),
+               resualt1[[2]], names(resualt1[[3]]), resualt1[[3]], names(resualt1[[4]]), resualt1[[4]], 
+               names(resualt1[[5]]), resualt1[[5]], names(resualt1[[6]]), resualt1[[6]],
+               names(resualt1[[7]]), resualt1[[7]], names(resualt1[[8]]), resualt1[[8]], 
+               names(resualt1[[9]]), resualt1[[9]], "",
+               "5%", names(resualt5[[1]]) ,resualt5[[1]], names(resualt5[[2]]),
+               resualt5[[2]], names(resualt5[[3]]), resualt5[[3]], names(resualt5[[4]]), resualt5[[4]], 
+               names(resualt5[[5]]), resualt5[[5]], names(resualt5[[6]]), resualt5[[6]],
+               names(resualt5[[7]]), resualt5[[7]], names(resualt5[[8]]), resualt5[[8]], 
+               names(resualt5[[9]]), resualt5[[9]], "",
+               "10%", names(resualt10[[1]]) ,resualt10[[1]], names(resualt10[[2]]),
+               resualt10[[2]], names(resualt10[[3]]), resualt10[[3]], names(resualt10[[4]]), resualt10[[4]], 
+               names(resualt10[[5]]), resualt10[[5]], names(resualt10[[6]]), resualt10[[6]],
+               names(resualt10[[7]]), resualt10[[7]], names(resualt10[[8]]), resualt10[[8]], 
+               names(resualt10[[9]]), resualt10[[9]]
+  ), ttest)
+  close(ttest)
+}
 
+TTest(Norm30, Norm70)
 
+BartlettTest <- function(vec, name){
+  n <- length(vec)
+  tn <- 0
+  for(i in 1 : n){
+    tn <- tn + vec[i]
+  }
+  
+  logSum <- 0
+  for(i in 1 : n){
+    logSum <- logSum + log(vec[i])
+  }
+  
+  Br <- ((2 * n * (log(tn / n)) - (1 / n) * (logSum)) / (1 + ((n + 1) / 6)))
+  BrLeft <- qchisq(0.025, n - 1)
+  BrRight <- qchisq(0.975, n - 1)
+  path <- paste0("BartlettTest", name, ".txt")
+  Bart <- file(path)
+  writeLines(c(paste("Br =", Br), paste("BrLeft =", BrLeft, "BrRight =", BrRight)), Bart)
+  close(Bart)
+}
 
+BartlettTest(Exp70, "Exp70")
+BartlettTest(Exp170, "Exp170")
 
-
-
+z.test(Exp70, Exp170, sigma.x = sd(Exp70), sigma.y = sd(Exp170))
 
 
 

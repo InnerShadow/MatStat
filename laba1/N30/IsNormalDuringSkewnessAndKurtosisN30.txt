@@ -1,0 +1,6 @@
+Is Normal During Skewness, 
+Ds = -0.61421200799595 DS = 0.426892395951238
+TRUE
+Is Normal During Kurtosis
+De = -0.866066051938537 DE = 0.832745618357633
+TRUE

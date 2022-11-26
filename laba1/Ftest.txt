@@ -1,0 +1,35 @@
+1%
+F test to compare two variances
+
+data:  Norm30 and Norm70
+F = 1.4268, num df = 29, denom df = 69, p-value = 0.2312
+alternative hypothesis: true ratio of variances is not equal to 1
+99 percent confidence interval:
+ 0.6642452 3.4508703
+sample estimates:
+ratio of variances 
+          1.426774
+
+5%
+F test to compare two variances
+
+data:  Norm30 and Norm70
+F = 1.4268, num df = 29, denom df = 69, p-value = 0.2312
+alternative hypothesis: true ratio of variances is not equal to 1
+95 percent confidence interval:
+ 0.7962463 2.7687325
+sample estimates:
+ratio of variances 
+          1.426774
+
+10%
+F test to compare two variances
+
+data:  Norm30 and Norm70
+F = 1.4268, num df = 29, denom df = 69, p-value = 0.2312
+alternative hypothesis: true ratio of variances is not equal to 1
+90 percent confidence interval:
+ 0.8743818 2.4820170
+sample estimates:
+ratio of variances 
+          1.426774 

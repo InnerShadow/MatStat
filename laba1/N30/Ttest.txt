@@ -1,0 +1,35 @@
+1%
+Welch Two Sample t-test
+
+data:  Norm30 and Norm70
+t = 0.029944, df = 47.247, p-value = 0.9762
+alternative hypothesis: true difference in means is not equal to 0
+99 percent confidence interval:
+ -14.25785  14.57958
+sample estimates:
+mean of x mean of y 
+ 230.0801  229.9193
+
+5%
+Welch Two Sample t-test
+
+data:  Norm30 and Norm70
+t = 0.029944, df = 47.247, p-value = 0.9762
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -10.64505  10.96678
+sample estimates:
+mean of x mean of y 
+ 230.0801  229.9193 
+
+10%
+Welch Two Sample t-test
+
+data:  Norm30 and Norm70
+t = 0.029944, df = 47.247, p-value = 0.9762
+alternative hypothesis: true difference in means is not equal to 0
+90 percent confidence interval:
+ -8.852290  9.174021
+sample estimates:
+mean of x mean of y 
+ 230.0801  229.9193 
