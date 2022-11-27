@@ -363,26 +363,26 @@ GetCountOperatingTime <- function(vec, name){
   title("Operation time")
   dev.off()
   
-  Num99 <- 0
-  Num95 <- 0
-  Num90 <- 0
+  Time99 <- 0
+  Time95 <- 0
+  Time90 <- 0
   for(i in 1 : length(Chance)){
     if(Chance[i] > 0.99){
-      Num99 <- Num99 + 1
+      Time99 <- tVec[i]
     }
     if(Chance[i] > 0.95){
-      Num95 <- Num95 + 1
+      Time95 <- tVec[i]
     }
     if(Chance[i] > 0.90){
-      Num90 <- Num90 + 1
+      Time90 <- tVec[i]
     } else {
       break
     }
   }
   path <- paste0("OperatingTimeData", name, ".txt")
   OperatingFile <- file(path)
-  writeLines(c(paste("Num to 99%", Num99), paste("Name of 95%", Num95), 
-               paste("Num of 90%", Num90)), OperatingFile)
+  writeLines(c(paste("Time to 99%", Time99), paste("Time of 95%", Time95), 
+               paste("Time of 90%", Time90)), OperatingFile)
   close(OperatingFile)
 }
 
