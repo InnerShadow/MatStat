@@ -302,6 +302,17 @@ Chi_square_graph <- function(vec, name){
     practical[i] <- tmp[i] / length(vec)
   }
   
+  chi <- 0
+  for(i in 1 : length(teoretic)){
+    chi <- chi + (((tmp[i] - length(vec) * teoretic[i]) ^ 2) / (teoretic[i] * length(vec)))
+  }
+  path <- paste0("Chi-squerStatics", name, ".txt")
+  chiFile <- file(path)
+  writeLines(c(paste("Chi Counted: ", chi), paste("Chi Critical =", qchisq(0.05, length(teoretic) - 1,
+                                                                          lower.tail = F)), 
+               paste("Shode we accept?", chi < qchisq(0.05, length(teoretic) - 1, lower.tail = F))), chiFile)
+  
+  close(chiFile)
   
   path <- paste0("Chi-squer", name, ".png")
   png(file = path)
@@ -319,4 +330,73 @@ Chi_square_graph <- function(vec, name){
 
 Chi_square_graph(Norm300, "N300")
 Chi_square_graph(Exp300, "Exp300")
+
+GetCountOperatingTime <- function(vec, name){
+  tmp <- sort(vec, decreasing = T)
+  Max <- max(vec) + 1
+  for(i in 1 : length(vec)){
+    tmp[i] <- tmp[i] / Max
+  }
+  
+  tStep <- 50 / length(vec)
+  tVec <- rep(0, length(vec))
+  for(i in 1 : length(vec)){
+    tVec[i] <- tStep * i
+  }
+  
+  FTeoretical <- rep(0, length(vec))
+  for(i in 1 : length(vec)){
+    FTeoretical[i] <- 1 - tmp[i] 
+  }
+  
+  Chance <- rep(0, length(vec))
+  for(i in 1 : length(vec)){
+    Chance[i] <- exp(-1 * tVec[i] * 0.0048)
+  }
+  
+  path <- paste0("OperatingTime", name, ".png")
+  png(file = path)
+  plot(Chance, col = "red")
+  lines(x = c(1:length(vec)), y = rep(0.99, length(vec)), col = "green")
+  lines(x = c(1:length(vec)), y = rep(0.95, length(vec)), col = "blue")
+  lines(x = c(1:length(vec)), y = rep(0.90, length(vec)), col = "yellow")
+  title("Operation time")
+  dev.off()
+  
+  Num99 <- 0
+  Num95 <- 0
+  Num90 <- 0
+  for(i in 1 : length(Chance)){
+    if(Chance[i] > 0.99){
+      Num99 <- Num99 + 1
+    }
+    if(Chance[i] > 0.95){
+      Num95 <- Num95 + 1
+    }
+    if(Chance[i] > 0.90){
+      Num90 <- Num90 + 1
+    } else {
+      break
+    }
+  }
+  path <- paste0("OperatingTimeData", name, ".txt")
+  OperatingFile <- file(path)
+  writeLines(c(paste("Num to 99%", Num99), paste("Name of 95%", Num95), 
+               paste("Num of 90%", Num90)), OperatingFile)
+  close(OperatingFile)
+}
+
+GetCountOperatingTime(Exp170, "Exp170")
+GetCountOperatingTime(Exp300, "Exp300")
+
+
+
+
+
+
+
+
+
+
+
 

@@ -1,0 +1,3 @@
+Chi Counted:  5.21596350931391
+Chi Critical = 16.9189776046204
+Shode we accept? TRUE
